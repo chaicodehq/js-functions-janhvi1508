@@ -46,17 +46,60 @@
  *   // => "Amit is coming!"
  */
 export function processGuests(guests, filterFn) {
-  // Your code here
+  if (!Array.isArray(guests) || typeof filterFn !== "function") {
+    return [];
+  }
+  let filteredList = [];
+  for (let i = 0; i < guests.length; i++) {
+    const currentGuest = guests[i];
+    const isApproved = filterFn(currentGuest);
+    if (isApproved === true) {
+      filteredList.push(currentGuest);
+    }
+  }
+  return filteredList;
 }
 
 export function notifyGuests(guests, notifyCallback) {
-  // Your code here
+  if (!Array.isArray(guests) || typeof notifyCallback !== "function") {
+    return [];
+  }
+  let results = [];
+  for (let i = 0; i < guests.length; i++) {
+    const currentGuest = guests[i];
+    const message = notifyCallback(currentGuest);
+    results.push(message);
+  }
+  return results;
 }
 
 export function handleRSVP(guest, onAccept, onDecline) {
-  // Your code here
+  if (
+    !guest ||
+    typeof onAccept !== "function" ||
+    typeof onDecline !== "function"
+  ) {
+    return null;
+  }
+  if (guest.rsvp === "yes") {
+    return onAccept(guest);
+  } else if (guest.rsvp === "no") {
+    return onDecline(guest);
+  } else {
+    return null;
+  }
 }
 
 export function transformGuestList(guests, ...transformFns) {
-  // Your code here
+  if (!Array.isArray(guests)) {
+    return [];
+  }
+  let currentList = guests;
+  for (let i = 0; i < transformFns.length; i++) {
+    const currentFn = transformFns[i];
+    if (typeof currentFn === "function") {
+      currentList = currentFn(currentList);
+    }
+  }
+  return currentList;
 }

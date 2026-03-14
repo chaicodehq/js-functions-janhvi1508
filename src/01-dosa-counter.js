@@ -32,5 +32,47 @@
  *   // => { type: "plain", quantity: 1, pricePerDosa: 40, total: 40 }
  */
 export function calculateDosaOrder(type, quantity = 1, isSpicy = false) {
-  // Your code here
+  if (
+    typeof type !== "string" ||
+    type === undefined ||
+    type === "" ||
+    !Number.isInteger(quantity) ||
+    quantity <= 0
+  ) {
+    return null;
+  }
+  const typeTrim = type.trim().toLowerCase();
+  let priceDosa = 0;
+  switch (typeTrim) {
+    case "masala":
+      priceDosa = 60;
+      break;
+    case "plain":
+      priceDosa = 40;
+      break;
+    case "onion":
+      priceDosa = 50;
+      break;
+    case "butter":
+      priceDosa = 70;
+      break;
+    case "paper":
+      priceDosa = 90;
+      break;
+    case "cheese":
+      priceDosa = 80;
+      break;
+    default:
+      return null;
+  }
+  if (isSpicy === true) {
+    priceDosa = priceDosa + 10;
+  }
+  let finalPrice = priceDosa * quantity;
+  return {
+    type: typeTrim,
+    quantity: quantity,
+    pricePerDosa: priceDosa,
+    total: finalPrice,
+  };
 }

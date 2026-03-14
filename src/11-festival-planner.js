@@ -49,5 +49,86 @@
  *   mgr.getUpcoming("2025-01-01", 1); // => [{ name: "Republic Day", ... }]
  */
 export function createFestivalManager() {
-  // Your code here
+  let festivals = [];
+  return {
+    addFestival: function (name, date, type) {
+      if (!name || name === "") return -1;
+      if (typeof date !== "string") return -1;
+
+      if (type !== "religious" && type !== "national" && type !== "cultural") {
+        return -1;
+      }
+
+      for (let i = 0; i < festivals.length; i++) {
+        if (festivals[i].name === name) {
+          return -1;
+        }
+      }
+      festivals.push({
+        name: name,
+        date: date,
+        type: type,
+      });
+
+      return festivals.length;
+    },
+
+    removeFestival: function (name) {
+      for (let i = 0; i < festivals.length; i++) {
+        if (festivals[i].name === name) {
+          festivals.splice(i, 1);
+          return true;
+        }
+      }
+      return false;
+    },
+    getAll: function () {
+      let copyList = [];
+      for (let i = 0; i < festivals.length; i++) {
+        let fest = festivals[i];
+        copyList.push({ name: fest.name, date: fest.date, type: fest.type });
+      }
+      return copyList;
+    },
+    getByType: function (type) {
+      let filteredList = [];
+      for (let i = 0; i < festivals.length; i++) {
+        if (festivals[i].type === type) {
+          let fest = festivals[i];
+          filteredList.push({
+            name: fest.name,
+            date: fest.date,
+            type: fest.type,
+          });
+        }
+      }
+      return filteredList;
+    },
+    getUpcoming: function (currentDate, n = 3) {
+      let upcomingList = [];
+      for (let i = 0; i < festivals.length; i++) {
+        if (festivals[i].date >= currentDate) {
+          let fest = festivals[i];
+          upcomingList.push({
+            name: fest.name,
+            date: fest.date,
+            type: fest.type,
+          });
+        }
+      }
+      upcomingList.sort(function (a, b) {
+        if (a.date < b.date) return -1;
+        if (a.date > b.date) return 1;
+        return 0;
+      });
+      let finalList = [];
+      for (let i = 0; i < n && i < upcomingList.length; i++) {
+        finalList.push(upcomingList[i]);
+      }
+      return finalList;
+    },
+    getCount: function () {
+      return festivals.length;
+    },
+  };
 }

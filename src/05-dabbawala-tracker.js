@@ -49,5 +49,81 @@
  *   // => { name: "Ram", area: "Dadar", total: 2, completed: 1, pending: 1, successRate: "50.00%" }
  */
 export function createDabbawala(name, area) {
-  // Your code here
+  let deliveries = [];
+  let currentId = 1;
+  return {
+    addDelivery: function (from, to) {
+      if (!from || !to || from === "" || to === "") {
+        return -1;
+      }
+      let newDelivery = {
+        id: currentId,
+        from: from,
+        to: to,
+        status: "pending",
+      };
+      deliveries.push(newDelivery);
+      let assignedId = currentId;
+      currentId = currentId + 1;
+      return assignedId;
+    },
+    completeDelivery: function (id) {
+      for (let i = 0; i < deliveries.length; i++) {
+        if (deliveries[i].id === id) {
+          if (deliveries[i].status === "pending") {
+            deliveries[i].status = "completed";
+            return true;
+          } else {
+            return false;
+          }
+        }
+      }
+      return false;
+    },
+    getActiveDeliveries: function () {
+      let activeList = [];
+      for (let i = 0; i < deliveries.length; i++) {
+        if (deliveries[i].status === "pending") {
+          let copyObj = {
+            id: deliveries[i].id,
+            from: deliveries[i].from,
+            to: deliveries[i].to,
+            status: deliveries[i].status,
+          };
+          activeList.push(copyObj);
+        }
+      }
+      return activeList;
+    },
+    getStats: function () {
+      let total = deliveries.length;
+      let completed = 0;
+      let pending = 0;
+      for (let i = 0; i < deliveries.length; i++) {
+        if (deliveries[i].status === "completed") {
+          completed = completed + 1;
+        } else if (deliveries[i].status === "pending") {
+          pending = pending + 1;
+        }
+      }
+      let successRate = "0.00%";
+      if (total > 0) {
+        let rate = (completed / total) * 100;
+        successRate = rate.toFixed(2) + "%"; // 2 decimal places tak set kiya
+      }
+      return {
+        name: name,
+        area: area,
+        total: total,
+        completed: completed,
+        pending: pending,
+        successRate: successRate,
+      };
+    },
+    reset: function () {
+      deliveries = [];
+      currentId = 1;
+      return true;
+    },
+  };
 }

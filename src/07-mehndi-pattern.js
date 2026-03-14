@@ -53,21 +53,79 @@
  *   generatePattern(3)        // => ["*", "**", "***", "**", "*"]
  */
 export function repeatChar(char, n) {
-  // Your code here
+  if (typeof char !== "string" || char === "") {
+    return "";
+  }
+  if (n <= 0) {
+    return "";
+  }
+  return char + repeatChar(char, n - 1);
 }
 
 export function sumNestedArray(arr) {
-  // Your code here
+  if (!Array.isArray(arr)) {
+    return 0;
+  }
+  if (arr.length === 0) {
+    return 0;
+  }
+  const firstElement = arr[0];
+  const restOfArray = arr.slice(1);
+  let firstValue = 0;
+  if (Array.isArray(firstElement)) {
+    firstValue = sumNestedArray(firstElement);
+  } else if (typeof firstElement === "number") {
+    firstValue = firstElement;
+  }
+  return firstValue + sumNestedArray(restOfArray);
 }
 
 export function flattenArray(arr) {
-  // Your code here
+  if (!Array.isArray(arr)) {
+    return [];
+  }
+  if (arr.length === 0) {
+    return [];
+  }
+  const firstElement = arr[0];
+  const restOfArray = arr.slice(1);
+  let firstPart = [];
+  if (Array.isArray(firstElement)) {
+    firstPart = flattenArray(firstElement);
+  } else {
+    firstPart = [firstElement];
+  }
+  return firstPart.concat(flattenArray(restOfArray));
 }
 
 export function isPalindrome(str) {
-  // Your code here
+  if (typeof str !== "string") {
+    return false;
+  }
+  const lowerStr = str.toLowerCase();
+  if (lowerStr.length <= 1) {
+    return true;
+  }
+  const firstChar = lowerStr[0];
+  const lastChar = lowerStr[lowerStr.length - 1];
+  if (firstChar !== lastChar) {
+    return false;
+  }
+  const middlePart = lowerStr.substring(1, lowerStr.length - 1);
+  return isPalindrome(middlePart);
 }
 
 export function generatePattern(n) {
-  // Your code here
+  if (!Number.isInteger(n) || n <= 0) {
+    return [];
+  }
+  function buildPattern(currentLine) {
+    if (currentLine === n) {
+      return [repeatChar("*", currentLine)];
+    }
+    const currentStars = repeatChar("*", currentLine);
+    const middlePattern = buildPattern(currentLine + 1);
+    return [currentStars].concat(middlePattern).concat([currentStars]);
+  }
+  return buildPattern(1);
 }
